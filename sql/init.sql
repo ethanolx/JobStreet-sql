@@ -9,12 +9,13 @@ CREATE TABLE Member (
     FirstName VARCHAR(30) NOT NULL,
     LastName VARCHAR(30) NOT NULL,
     Password VARCHAR(20) NOT NULL,
-    HasWorkExperience BIT NOT NULL,
-    WorkingSince DECIMAL(4, 0) NOT NULL,
+    HasWorkExperience BIT NULL,
+    WorkingSince INTEGER NULL CHECK (WorkingSince BETWEEN 1900 AND 2200),
+    ExpectedSalary DECIMAL(7, 2) NULL,
     Nationality VARCHAR(20) NOT NULL,
-    CurrentResidence VARCHAR(20) NOT NULL
+    ResidentCountry VARCHAR(20) NOT NULL,
+    PRCountry VARCHAR(20) NULL
 );
-
 
 CREATE TABLE Language (
     MemberEmail VARCHAR(30),
@@ -40,12 +41,12 @@ CREATE TABLE PreferredSpecialization (
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
 
-CREATE TABLE PermanentResidence (
-    MemberEmail VARCHAR(30),
-    Country VARCHAR(20),
-    PRIMARY KEY (MemberEmail, Country),
-    FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
-);
+/* CREATE TABLE PermanentResidence ( */
+/*     MemberEmail VARCHAR(30), */
+/*     Country VARCHAR(20), */
+/*     PRIMARY KEY (MemberEmail, Country), */
+/*     FOREIGN KEY (MemberEmail) REFERENCES Member (Email) */
+/* ); */
 
 CREATE TABLE PreferredWorkLocation (
     MemberEmail VARCHAR(30),
@@ -54,56 +55,71 @@ CREATE TABLE PreferredWorkLocation (
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
 
-CREATE TABLE WorkExperience (
-    WorkExperienceID SMALLINT IDENTITY(1, 1) PRIMARY KEY,
-    PositionTitle VARCHAR(20) NOT NULL,
-    CompanyName VARCHAR(30) NOT NULL,
-    Industry VARCHAR(20),
-    Role VARCHAR(15),
-    PositionLevel VARCHAR(15),
-    Specialization VARCHAR(20),
-    JoinedIn DATE NOT NULL,
-    JoinedUntil DATE DEFAULT NULL,
-    MobileNumber VARCHAR(15),
-    MemberEmail VARCHAR(30),
-    FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
-);
-
 CREATE TABLE CurrentEducation (
     MemberEmail VARCHAR(30) PRIMARY KEY,
     YearOfAdmission DECIMAL(4, 0) NOT NULL,
-    CurrentLevelOfStudy
+    CurrentLevelOfStudy VARCHAR(20) NOT NULL,
+    InstituteName VARCHAR(30) NOT NULL
+    FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
+);
 
+CREATE TABLE HighestQualification (
+    MemberEmail VARCHAR(30) PRIMARY KEY,
+    Qualification VARCHAR(20) NOT NULL,
+    InstituteName VARCHAR(30) NOT NULL,
+    FieldOfStudy VARCHAR(15) NOT NULL,
+    InstituteLocation VARCHAR(30) NULL,
+    GraduationDate DATE NOT NULL
+    FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
+);
 
 CREATE TABLE Company (
-    CompanyRegNo INTEGER PRIMARY KEY,
-    CompanyName VARCHAR(20) NOT NULL,
-    Address VARCHAR(15) NOT NULL,
-    WorkStartTime TIME NOT NULL,
-    WorkEndTime TIME NOT NULL,
-    CompanySizeMin INTEGER NOT NULL,
-    CompanySizeMax INTEGER NOT NULL CHECK (CompanySizeMax > CompanySizeMin),
-    Industry VARCHAR(20)
+    CompanyRegNo VARCHAR(5) PRIMARY KEY,
+    CompanyName VARCHAR(40) NOT NULL,
+    Address VARCHAR(15) NULL,
+    WorkStartTime TIME NULL,
+    WorkEndTime TIME NULL,
+    CompanySizeMin INTEGER NULL,
+    CompanySizeMax INTEGER NULL,
+    Industry VARCHAR(20),
+    CHECK (CompanySizeMax > CompanySizeMin)
+);
+
+CREATE TABLE WorkExperience (
+    WorkExperienceID SMALLINT IDENTITY(1, 1) PRIMARY KEY,
+    PositionTitle VARCHAR(20) NOT NULL,
+    CompanyRegNo VARCHAR(5),
+    Industry VARCHAR(20),
+    Role VARCHAR(15),
+    PositionLevel VARCHAR(15),
+    Specialization VARCHAR(40),
+    JoinedIn DATE NULL,
+    JoinedUntil DATE DEFAULT NULL,
+    MobileNumber VARCHAR(15),
+    MemberEmail VARCHAR(30),
+    FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
+    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo)
 );
 
 CREATE TABLE JobVacancy (
     JobID INTEGER PRIMARY KEY,
     JobTitle VARCHAR(25) NOT NULL,
     WorkLocation VARCHAR(15),
-    Specialization VARCHAR(20),
-    SalaryMin INTEGER NOT NULL,
-    SalaryMax INTEGER NOT NULL CHECK (SalaryMax > SalaryMin),
+    Specialization VARCHAR(40),
+    SalaryMin INTEGER NULL,
+    SalaryMax INTEGER NULL,
     JobLevel VARCHAR(20) NOT NULL,
     JobResponsibilities VARCHAR(150),
     AdvertisementDate DATE DEFAULT NULL,
     ApplicationClosingDate DATE DEFAULT NULL,
-    CompanyRegNo INTEGER NOT NULL,
+    CompanyRegNo VARCHAR(5),
+    CHECK (SalaryMax > SalaryMin),
     FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo)
 );
 
 CREATE TABLE Review (
     MemberEmail VARCHAR(30),
-    CompanyRegNo INTEGER,
+    CompanyRegNo VARCHAR(5),
     RecommendToFriend BIT,
     OverallRating TINYINT CHECK (OverallRating BETWEEN 1 AND 5),
     SalaryRating VARCHAR(7) CHECK (SalaryRating IN ('High', 'Average', 'Low')),
