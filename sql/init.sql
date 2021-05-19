@@ -4,6 +4,48 @@ CREATE DATABASE JobStreet2012085;
 
 USE JobStreet2012085;
 
+DROP FUNCTION IF EXISTS dbo.MonthVerbose;
+GO
+
+CREATE FUNCTION dbo.MonthVerbose(@dt DATE) RETURNS VARCHAR(12) AS
+BEGIN
+    DECLARE @month INTEGER
+    SET @month = MONTH(@dt)
+    RETURN 
+        CASE 
+            WHEN @month = 1 THEN 'Jan'
+            WHEN @month = 2 THEN 'Feb'
+            WHEN @month = 3 THEN 'Mar'
+            WHEN @month = 4 THEN 'Apr'
+            WHEN @month = 5 THEN 'May'
+            WHEN @month = 6 THEN 'Jun'
+            WHEN @month = 7 THEN 'Jul'
+            WHEN @month = 8 THEN 'Aug'
+            WHEN @month = 9 THEN 'Sep'
+            WHEN @month = 10 THEN 'Oct'
+            WHEN @month = 11 THEN 'Nov'
+            WHEN @month = 12 THEN 'Dec'
+        END
+END;
+GO
+
+DROP FUNCTION IF EXISTS dbo.GetFullName;
+GO
+
+CREATE FUNCTION dbo.GetFullName(@fname VARCHAR(15), @lname VARCHAR(15)) RETURNS VARCHAR(31) AS
+BEGIN
+    RETURN @fname + ' ' + ISNULL(@lname, '')
+END;
+GO
+
+DROP FUNCTION IF EXISTS dbo.DateVerbose;
+GO
+
+CREATE FUNCTION dbo.DateVerbose(@dt DATE) RETURNS VARCHAR(15) AS
+BEGIN
+    RETURN CAST(YEAR(@dt) AS CHAR(4)) + ' ' + dbo.MonthVerbose(@dt)
+END;
+GO
 CREATE TABLE Member (
     Email VARCHAR(30) PRIMARY KEY,
     FirstName VARCHAR(30) NOT NULL,
