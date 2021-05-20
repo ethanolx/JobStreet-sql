@@ -3,7 +3,7 @@ USE JobStreet2012085;
 INSERT INTO Award (AwardNo, AwardName) VALUES
     ('A1234', 'Best Sales Person'),
     ('A2311', 'Top Performing Manager'),
-    ('A3212', 'Oustanding Employee of the Year');
+    ('A3212', 'Outstanding Employee of the Year');
 
 INSERT INTO CompanyAward (CompanyRegNo, AwardNo, Value) VALUES
     ('C1230', 'A2311', 2000.00),
