@@ -11,8 +11,8 @@ CREATE FUNCTION dbo.MonthVerbose(@dt DATE) RETURNS VARCHAR(12) AS
 BEGIN
     DECLARE @month INTEGER
     SET @month = MONTH(@dt)
-    RETURN 
-        CASE 
+    RETURN
+        CASE
             WHEN @month = 1 THEN 'Jan'
             WHEN @month = 2 THEN 'Feb'
             WHEN @month = 3 THEN 'Mar'
@@ -50,7 +50,7 @@ CREATE TABLE Member (
     Email VARCHAR(30) PRIMARY KEY,
     FirstName VARCHAR(30) NOT NULL,
     LastName VARCHAR(30) NOT NULL,
-    Password VARCHAR(20) NOT NULL,
+    [Password] VARCHAR(20) NOT NULL,
     HasWorkExperience BIT NULL,
     WorkingSince INTEGER NULL CHECK (WorkingSince BETWEEN 1900 AND 2200),
     ExpectedSalary DECIMAL(7, 2) NULL,
@@ -59,11 +59,11 @@ CREATE TABLE Member (
     PRCountry VARCHAR(20) NULL
 );
 
-CREATE TABLE Language (
+CREATE TABLE [Language] (
     MemberEmail VARCHAR(30),
     LanguageName VARCHAR(20),
     PrimaryLanguage BIT NOT NULL,
-    ProficiencyLevel TINYINT NOT NULL,
+    ProficiencyLevel TINYINT NOT NULL CHECK (ProficiencyLevel >= 0 AND ProficiencyLevel <=10),
     PRIMARY KEY (MemberEmail, LanguageName),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
@@ -82,13 +82,6 @@ CREATE TABLE PreferredSpecialization (
     PRIMARY KEY (MemberEmail, SpecializationName),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
-
-/* CREATE TABLE PermanentResidence ( */
-/*     MemberEmail VARCHAR(30), */
-/*     Country VARCHAR(20), */
-/*     PRIMARY KEY (MemberEmail, Country), */
-/*     FOREIGN KEY (MemberEmail) REFERENCES Member (Email) */
-/* ); */
 
 CREATE TABLE PreferredWorkLocation (
     MemberEmail VARCHAR(30),
