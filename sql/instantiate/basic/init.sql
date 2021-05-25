@@ -1,9 +1,11 @@
+/* Reset Database From Scratch */
 DROP DATABASE IF EXISTS JobStreet2012085;
 
 CREATE DATABASE JobStreet2012085;
 
 USE JobStreet2012085;
 
+/* Utility Functions */
 DROP FUNCTION IF EXISTS dbo.MonthVerbose;
 GO
 
@@ -46,68 +48,78 @@ BEGIN
     RETURN CAST(YEAR(@dt) AS CHAR(4)) + ' ' + dbo.MonthVerbose(@dt)
 END;
 GO
+
+/* Relations */
 CREATE TABLE Member (
-    Email VARCHAR(30) PRIMARY KEY,
-    FirstName VARCHAR(30) NOT NULL,
-    LastName VARCHAR(30) NOT NULL,
+    Email VARCHAR(30),
+    FirstName VARCHAR(15) NOT NULL,
+    LastName VARCHAR(15),
     [Password] VARCHAR(20) NOT NULL,
-    HasWorkExperience BIT NULL,
-    WorkingSince INTEGER NULL CHECK (WorkingSince BETWEEN 1900 AND 2200),
-    ExpectedSalary DECIMAL(7, 2) NULL,
-    Nationality VARCHAR(20) NOT NULL,
+    HasWorkExperience BIT NOT NULL DEFAULT 0,
+    WorkingSince INTEGER,
+    ExpectedSalary DECIMAL(7, 2),
     ResidentCountry VARCHAR(20) NOT NULL,
-    PRCountry VARCHAR(20) NULL
+    Nationality VARCHAR(20),
+    PRCountry VARCHAR(20),
+    PRIMARY KEY (Email),
+    CHECK (WorkingSince BETWEEN 1900 AND 2200)
 );
 
 CREATE TABLE [Language] (
     MemberEmail VARCHAR(30),
-    LanguageName VARCHAR(20),
-    PrimaryLanguage BIT NOT NULL,
-    ProficiencyLevel TINYINT NOT NULL CHECK (ProficiencyLevel >= 0 AND ProficiencyLevel <=10),
-    PRIMARY KEY (MemberEmail, LanguageName),
-    FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
+    Language VARCHAR(20),
+    PrimaryLanguage BIT NOT NULL DEFAULT 0,
+    LangProficiency TINYINT NOT NULL,
+    PRIMARY KEY (MemberEmail, Language),
+    FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
+    CHECK (LangProficiency BETWEEN 0 AND 10)
 );
 
 CREATE TABLE Skill (
     MemberEmail VARCHAR(30),
-    SkillName VARCHAR(30),
-    ProficiencyLevel VARCHAR(12) NOT NULL CHECK (ProficiencyLevel IN('Beginner', 'Intermediate', 'Advanced')),
-    PRIMARY KEY (MemberEmail, SkillName),
-    FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
+    Skill VARCHAR(20),
+    ProficiencyLevel VARCHAR(12) NOT NULL,
+    PRIMARY KEY (MemberEmail, Skill),
+    FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
+    CHECK ProficiencyLevel IN ('Beginner', 'Intermediate', 'Advanced')
 );
 
 CREATE TABLE PreferredSpecialization (
     MemberEmail VARCHAR(30),
-    SpecializationName VARCHAR(30),
-    PRIMARY KEY (MemberEmail, SpecializationName),
+    Specialization VARCHAR(40),
+    PRIMARY KEY (MemberEmail, Specialization),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
 
 CREATE TABLE PreferredWorkLocation (
     MemberEmail VARCHAR(30),
-    Region VARCHAR(20),
+    Region VARCHAR(25),
     PRIMARY KEY (MemberEmail, Region),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
 
 CREATE TABLE CurrentEducation (
-    MemberEmail VARCHAR(30) PRIMARY KEY,
-    YearOfAdmission DECIMAL(4, 0) NOT NULL,
-    CurrentLevelOfStudy VARCHAR(20) NOT NULL,
-    InstituteName VARCHAR(30) NOT NULL
-    FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
+    MemberEmail VARCHAR(30),
+    YearOfAdmission INTEGER NOT NULL,
+    CurrentLevelOfStudy VARCHAR(15) NOT NULL,
+    CourseOfStudy VARCHAR(30) NOT NULL,
+    InstituteName VARCHAR(30) NOT NULL,
+    PRIMARY KEY (MemberEmail),
+    FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
+    CHECK YearOfAdmission BETWEEN 1900 AND 2200
 );
 
 CREATE TABLE HighestQualification (
-    MemberEmail VARCHAR(30) PRIMARY KEY,
-    Qualification VARCHAR(20) NOT NULL,
+    MemberEmail VARCHAR(30),
+    Qualification VARCHAR(25) NOT NULL,
     InstituteName VARCHAR(30) NOT NULL,
-    FieldOfStudy VARCHAR(15) NOT NULL,
-    InstituteLocation VARCHAR(30) NULL,
-    GraduationDate DATE NOT NULL
+    FieldOfStudy VARCHAR(20) NOT NULL,
+    InstituteLocation VARCHAR(30) NOT NULL,
+    GraduationDate DATE NOT NULL,
+    PRIMARY KEY (MemberEmail),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
-
+/* where i stopped */
 CREATE TABLE Company (
     CompanyRegNo VARCHAR(5) PRIMARY KEY,
     CompanyName VARCHAR(40) NOT NULL,
