@@ -44,3 +44,7 @@ JobStreet ---- doc ---- appendices.docx
            |
            `-- README.md
 ```
+
+## See Also
+
+Entity Relationship Diagram: `JobStreet/doc/jobstreet.erd`

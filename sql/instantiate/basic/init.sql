@@ -49,25 +49,37 @@ BEGIN
 END;
 GO
 
+DROP FUNCTION IF EXISTS dbo.CheckWorkExperience;
+GO
+
+CREATE FUNCTION dbo.CheckWorkExperience(@em VARCHAR(30), @comp CHAR(5)) RETURNS BIT AS
+BEGIN
+    IF @em IN (SELECT DISTINCT MemberEmail FROM WorkExperience WHERE CompanyRegNo = @comp)
+        RETURN 1
+    RETURN 0
+END;
+GO
+
 /* Relations */
 CREATE TABLE Member (
-    Email VARCHAR(30),
+    Email VARCHAR(30) NOT NULL,
     FirstName VARCHAR(15) NOT NULL,
-    LastName VARCHAR(15),
+    LastName VARCHAR(15) DEFAULT NULL,
     [Password] VARCHAR(20) NOT NULL,
-    HasWorkExperience BIT NOT NULL DEFAULT 0,
-    WorkingSince INTEGER,
-    ExpectedSalary DECIMAL(7, 2),
+    /* HasWorkExperience BIT NOT NULL DEFAULT 0, */
+    WorkingSince INTEGER DEFAULT NULL,
+    ExpectedSalary DECIMAL(7, 2) DEFAULT NULL,
     ResidentCountry VARCHAR(20) NOT NULL,
-    Nationality VARCHAR(20),
-    PRCountry VARCHAR(20),
+    Nationality VARCHAR(20) DEFAULT NULL,
+    PRCountry VARCHAR(20) DEFAULT NULL,
     PRIMARY KEY (Email),
+    CHECK (Email LIKE '%@%'),
     CHECK (WorkingSince BETWEEN 1900 AND 2200)
 );
 
 CREATE TABLE [Language] (
-    MemberEmail VARCHAR(30),
-    Language VARCHAR(20),
+    MemberEmail VARCHAR(30) NOT NULL,
+    Language VARCHAR(20) NOT NULL,
     PrimaryLanguage BIT NOT NULL DEFAULT 0,
     LangProficiency TINYINT NOT NULL,
     PRIMARY KEY (MemberEmail, Language),
@@ -76,102 +88,117 @@ CREATE TABLE [Language] (
 );
 
 CREATE TABLE Skill (
-    MemberEmail VARCHAR(30),
-    Skill VARCHAR(20),
-    ProficiencyLevel VARCHAR(12) NOT NULL,
+    MemberEmail VARCHAR(30) NOT NULL,
+    Skill VARCHAR(20) NOT NULL,
+    SkillProficiency VARCHAR(12) NOT NULL,
     PRIMARY KEY (MemberEmail, Skill),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
-    CHECK ProficiencyLevel IN ('Beginner', 'Intermediate', 'Advanced')
+    CHECK (SkillProficiency IN ('Beginner', 'Intermediate', 'Advanced'))
 );
 
 CREATE TABLE PreferredSpecialization (
-    MemberEmail VARCHAR(30),
-    Specialization VARCHAR(40),
+    MemberEmail VARCHAR(30) NOT NULL,
+    Specialization VARCHAR(40) NOT NULL,
     PRIMARY KEY (MemberEmail, Specialization),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
 
 CREATE TABLE PreferredWorkLocation (
-    MemberEmail VARCHAR(30),
-    Region VARCHAR(25),
+    MemberEmail VARCHAR(30) NOT NULL,
+    Region VARCHAR(25) NOT NULL,
     PRIMARY KEY (MemberEmail, Region),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
 
 CREATE TABLE CurrentEducation (
-    MemberEmail VARCHAR(30),
+    MemberEmail VARCHAR(30) NOT NULL,
     YearOfAdmission INTEGER NOT NULL,
     CurrentLevelOfStudy VARCHAR(15) NOT NULL,
     CourseOfStudy VARCHAR(30) NOT NULL,
-    InstituteName VARCHAR(30) NOT NULL,
+    InstituteName VARCHAR(40) NOT NULL,
     PRIMARY KEY (MemberEmail),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
-    CHECK YearOfAdmission BETWEEN 1900 AND 2200
+    CHECK (YearOfAdmission BETWEEN 1900 AND 2200)
 );
 
 CREATE TABLE HighestQualification (
-    MemberEmail VARCHAR(30),
+    MemberEmail VARCHAR(30) NOT NULL,
     Qualification VARCHAR(25) NOT NULL,
-    InstituteName VARCHAR(30) NOT NULL,
-    FieldOfStudy VARCHAR(20) NOT NULL,
+    InstituteName VARCHAR(40) NOT NULL,
+    FieldOfStudy VARCHAR(30) NOT NULL,
     InstituteLocation VARCHAR(30) NOT NULL,
     GraduationDate DATE NOT NULL,
     PRIMARY KEY (MemberEmail),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email)
 );
-/* where i stopped */
+
 CREATE TABLE Company (
-    CompanyRegNo VARCHAR(5) PRIMARY KEY,
-    CompanyName VARCHAR(40) NOT NULL,
-    Address VARCHAR(15) NULL,
-    WorkStartTime TIME NULL,
-    WorkEndTime TIME NULL,
-    CompanySizeMin INTEGER NULL,
-    CompanySizeMax INTEGER NULL,
-    Industry VARCHAR(20),
+    CompanyRegNo CHAR(5) NOT NULL,
+    CompanyName VARCHAR(40) NOT NULL UNIQUE,
+    Address VARCHAR(40) DEFAULT NULL,
+    WorkStartTime TIME DEFAULT NULL,
+    WorkEndTime TIME DEFAULT NULL,
+    CompanySizeMin INTEGER DEFAULT NULL,
+    CompanySizeMax INTEGER DEFAULT NULL,
+    Industry VARCHAR(30) NOT NULL,
+    PRIMARY KEY (CompanyRegNo),
     CHECK (CompanySizeMax > CompanySizeMin)
 );
 
 CREATE TABLE WorkExperience (
-    WorkExperienceID SMALLINT IDENTITY(1, 1) PRIMARY KEY,
-    PositionTitle VARCHAR(20) NOT NULL,
-    CompanyRegNo VARCHAR(5),
-    Industry VARCHAR(20),
-    Role VARCHAR(15),
-    PositionLevel VARCHAR(15),
-    Specialization VARCHAR(40),
-    JoinedIn DATE NULL,
+    WorkExperienceID INTEGER IDENTITY(1, 1) NOT NULL,
+    PositionTitle VARCHAR(40) NOT NULL,
+    CompanyRegNo CHAR(5),
+    MemberEmail VARCHAR(30) NOT NULL,
+    Role VARCHAR(20) NOT NULL,
+    PositionLevel VARCHAR(20) NOT NULL,
+    Specialization VARCHAR(40) NOT NULL,
+    JoinedIn DATE NOT NULL,
     JoinedUntil DATE DEFAULT NULL,
-    MobileNumber VARCHAR(15),
-    MemberEmail VARCHAR(30),
+    MobileNumber VARCHAR(15) DEFAULT NULL,
+    CompanyName VARCHAR(40) DEFAULT NULL,
+    PRIMARY KEY (WorkExperienceID),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
-    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo)
+    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo),
+    CHECK ((CompanyRegNo IS NULL AND CompanyName IS NOT NULL) OR (CompanyRegNo IS NOT NULL AND CompanyName IS NULL))
 );
 
 CREATE TABLE JobVacancy (
-    JobID INTEGER PRIMARY KEY,
-    JobTitle VARCHAR(25) NOT NULL,
-    WorkLocation VARCHAR(15),
-    Specialization VARCHAR(40),
-    SalaryMin INTEGER NULL,
-    SalaryMax INTEGER NULL,
+    CompanyRegNo CHAR(5) NOT NULL,
+    JobID INTEGER IDENTITY(1, 1) NOT NULL,
+    JobTitle VARCHAR(40) NOT NULL,
     JobLevel VARCHAR(20) NOT NULL,
-    JobResponsibilities VARCHAR(150),
+    WorkLocation VARCHAR(25) NOT NULL,
+    Specialization VARCHAR(40) NOT NULL,
+    MinSalary DECIMAL(7, 2) DEFAULT NULL,
+    MaxSalary DECIMAL(7, 2) DEFAULT NULL,
+    JobResponsibilities VARCHAR(120),
     AdvertisementDate DATE DEFAULT NULL,
     ApplicationClosingDate DATE DEFAULT NULL,
-    CompanyRegNo VARCHAR(5),
-    CHECK (SalaryMax > SalaryMin),
-    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo)
+    PRIMARY KEY (JobID),
+    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo),
+    CHECK (MaxSalary > MinSalary)
 );
 
 CREATE TABLE Review (
-    MemberEmail VARCHAR(30),
-    CompanyRegNo VARCHAR(5),
-    RecommendToFriend BIT,
-    OverallRating TINYINT CHECK (OverallRating BETWEEN 1 AND 5),
-    SalaryRating VARCHAR(7) CHECK (SalaryRating IN ('High', 'Average', 'Low')),
-    DateOfReview TIMESTAMP,
+    MemberEmail VARCHAR(30) NOT NULL,
+    CompanyRegNo CHAR(5) NOT NULL,
+    RecommendToFriend BIT NOT NULL,
+    OverallRating TINYINT NOT NULL,
+    SalaryRating VARCHAR(7) NOT NULL,
+    DateOfReview DATE NOT NULL DEFAULT GETDATE(),
     PRIMARY KEY (MemberEmail, CompanyRegNo),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
-    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo)
+    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo),
+    CHECK (OverallRating BETWEEN 1 AND 5),
+    CHECK (SalaryRating IN ('High', 'Average', 'Low')),
+    CHECK (dbo.CheckWorkExperience(MemberEmail, CompanyRegNo) = 1)
+);
+
+CREATE TABLE JobApplication (
+    MemberEmail VARCHAR(30) NOT NULL,
+    JobID INTEGER NOT NULL,
+    PRIMARY KEY (MemberEmail, JobID),
+    FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
+    FOREIGN KEY (JobID) REFERENCES JobVacancy (JobID)
 );
