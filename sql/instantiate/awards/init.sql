@@ -4,36 +4,32 @@ USE JobStreet2012085;
 DROP FUNCTION IF EXISTS dbo.GetWorkingPeriod;
 GO
 
-CREATE FUNCTION dbo.GetWorkingPeriod(@em VARCHAR(30), @comp CHAR(5)) RETURNS TABLE AS
+CREATE FUNCTION dbo.GetWorkingPeriods(@em VARCHAR(30), @comp CHAR(5)) RETURNS TABLE AS
 RETURN
     (SELECT
-        MIN(JoinedIn) AS 'StartDate',
-        MAX(ISNULL(JoinedUntil, '9999-12-31')) AS 'EndDate'
+        JoinedIn,
+        JoinedUntil
     FROM
         WorkExperience
     WHERE
         MemberEmail = @em AND
-        CompanyRegNo = @comp
-    GROUP BY
-        MemberEmail)
+        CompanyRegNo = @comp);
 GO
 
 DROP FUNCTION IF EXISTS dbo.CheckAwardConferment;
 GO
 
-CREATE FUNCTION dbo.CheckAwardConferment(@em VARCHAR(30), @comp CHAR(5), @dt DATE) RETURNS BIT AS
+CREATE FUNCTION dbo.CheckAwardConferment(@em VARCHAR(30), @comp CHAR(5), @dt DATE) RETURNS INT AS
 BEGIN
-    DECLARE @st DATE
-    DECLARE @nd DATE
-    SELECT
-        @st = StartDate,
-        @nd = EndDate
-    FROM
-        dbo.GetWorkingPeriod(@em, @comp)
-    IF @dt >= @st AND @dt <= @nd
+    IF
+        (SELECT COUNT(*)
+        FROM dbo.GetWorkingPeriods(@em, @comp) 
+        WHERE
+            JoinedIn <= @dt AND 
+            ISNULL(JoinedUntil, '9999-12-31') >= @dt) >= 1
         RETURN 1
     RETURN 0
-END
+END;
 GO
 
 /* Award Relation */
@@ -62,5 +58,6 @@ CREATE TABLE AwardConferment (
     CompanyRegNo CHAR(5) NOT NULL,
     FOREIGN KEY (AwardNo) REFERENCES Award (AwardNo),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
-    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo)
+    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo),
+    CHECK (dbo.CheckAwardConferment(MemberEmail, CompanyRegNo, DateAwarded) = 1)
 );

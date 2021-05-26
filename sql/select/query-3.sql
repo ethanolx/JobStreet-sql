@@ -1,18 +1,5 @@
 USE JobStreet2012085;
 
-/* Without subquery */
-/* SELECT */
-/*     Company.CompanyRegNo AS 'companyNo', */
-/*     CompanyName AS 'companyName', */
-/*     COUNT(DISTINCT MemberEmail) AS 'No of Employees' */
-/* FROM */
-/*     WorkExperience INNER JOIN Company ON WorkExperience.CompanyRegNo = Company.CompanyRegNo */
-/* WHERE */
-/*     JoinedUntil IS NULL AND Company.Industry NOT LIKE '%finance%' */
-/* GROUP BY */
-/*     Company.CompanyRegNo, Company.CompanyName; */
-
-/* With subquery */
 SELECT
     C.CompanyRegNo AS 'companyNo',
     C.CompanyName AS 'companyName',
@@ -37,5 +24,7 @@ FROM
             GROUP BY
                 CompanyRegNo)
             AS W
-        ON C.CompanyRegNo = W.CompanyRegNo;
+        ON C.CompanyRegNo = W.CompanyRegNo
+ORDER BY
+    'companyName';
 

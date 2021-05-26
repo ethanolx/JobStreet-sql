@@ -30,9 +30,9 @@ INSERT INTO CompanyAward (CompanyRegNo, AwardNo, Value) VALUES
 INSERT INTO AwardConferment (MemberEmail, AwardNo, CompanyRegNo, DateAwarded) VALUES
     ('alanang@gmail.com', 'A3212', 'C4568', '2012-08-01'),
     ('LeeBB@gmail.com', 'A2311', 'C3456', '1999-04-01'),
-    ('Prisca@Yahoo.com', 'A2311', 'C1230', '1990-07-01'),
+    ('Prisca@Yahoo.com', 'A2311', 'C3456', '1990-07-01'),
     ('Prisca@Yahoo.com', 'A3212', 'C3456', '1990-07-01'),
-    ('Prisca@Yahoo.com', 'A2311', 'C3456', '1993-01-01'),
+    ('Prisca@Yahoo.com', 'A2311', 'C1230', '1993-01-01'),
     ('Robert@gmail.com', 'A8000', 'C2020', '1979-03-20'),
     ('Robert@gmail.com', 'A1000', 'C2020', '1999-08-15'),
     ('iscar@yahoo.com.sg', 'A6000', 'C1001', '2000-02-02'),
