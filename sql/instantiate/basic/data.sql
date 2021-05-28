@@ -12,7 +12,9 @@ INSERT INTO Member (Email, FirstName, LastName, Password, ResidentCountry, Natio
     ('iscar@yahoo.com.sg', 'Isaac', NULL, 'dwod&#2k', 'Malaysia', 'Malaysia', 'Singapore', 4200.0, 1990),
     ('john@inet.com', 'Jones', 'Jonathan', 'f3o9k20', 'Singapore', 'China', NULL, NULL, 2010),
     ('lucy3@mmail.com', 'Lucy', 'Lim', '(27K2kcl', 'Singapore', 'Australia', 'New Zealand', 6000.0, 2003),
-    ('bucky@barnes.net', 'Bucky', 'Barnes', 'ggg1239o', 'Singapore', 'India', 'Germany', NULL, NULL);
+    ('bucky@barnes.net', 'Bucky', 'Barnes', 'ggg1239o', 'Singapore', 'India', 'Germany', NULL, NULL),
+    ('aiden@yahoo.com', 'Aiden', 'Lee', '38nd3d9J', 'Singapore', 'Singapore', NULL, NULL, NULL),
+    ('xavierkhoo@net.com', 'Xavier', 'Khoo', '2s*n3Kd3j', 'Singapore', 'Japan', 'Singapore', 5600.0, NULL);
 
 /* Language Relation */
 INSERT INTO Language (MemberEmail, Language, LangProficiency, PrimaryLanguage) VALUES
@@ -29,7 +31,9 @@ INSERT INTO Language (MemberEmail, Language, LangProficiency, PrimaryLanguage) V
     ('iscar@yahoo.com.sg', 'Malay', 5, 0),
     ('john@inet.com', 'Mandarin', 9, 1),
     ('lucy3@mmail.com', 'English', 10, 1),
-    ('bucky@barnes.net', 'German', 7, 1);
+    ('bucky@barnes.net', 'German', 7, 1),
+    ('aiden@yahoo.com', 'English', 6, 1),
+    ('xavierkhoo@net.com', 'Japanese', 8, 1);
 
 /* Skill Relation */
 INSERT INTO Skill (MemberEmail, Skill, SkillProficiency) VALUES
@@ -45,7 +49,9 @@ INSERT INTO Skill (MemberEmail, Skill, SkillProficiency) VALUES
     ('iscar@yahoo.com.sg', 'Mechatronics', 'Advanced'),
     ('john@inet.com', 'Mathematics', 'Advanced'),
     ('lucy3@mmail.com', 'Chemical Analysis', 'Advanced'),
-    ('bucky@barnes.net', 'Networking', 'Intermediate');
+    ('bucky@barnes.net', 'Networking', 'Intermediate'),
+    ('aiden@yahoo.com', 'Science', 'Beginner'),
+    ('xavierkhoo@net.com', 'Literature', 'Intermediate');
 
 /* Preferred Specialization Relation */
 INSERT INTO PreferredSpecialization (MemberEmail, Specialization) VALUES
@@ -59,7 +65,9 @@ INSERT INTO PreferredSpecialization (MemberEmail, Specialization) VALUES
     ('iscar@yahoo.com.sg', 'Robotics'),
     ('john@inet.com', 'Education'),
     ('lucy3@mmail.com', 'Chemical Analysis'),
-    ('bucky@barnes.net', 'IT Networking');
+    ('bucky@barnes.net', 'IT Networking'),
+    ('aiden@yahoo.com', 'IT Software'),
+    ('xavierkhoo@net.com', 'Education');
 
 /* Preferred Work Location Relation */
 INSERT INTO PreferredWorkLocation (MemberEmail, Region) VALUES
@@ -73,12 +81,17 @@ INSERT INTO PreferredWorkLocation (MemberEmail, Region) VALUES
     ('iscar@yahoo.com.sg', 'Johor Bahru'),
     ('john@inet.com', 'Australia'),
     ('lucy3@mmail.com', 'Singapore'),
-    ('bucky@barnes.net', 'New York');
+    ('bucky@barnes.net', 'New York'),
+    ('aiden@yahoo.com', 'Singapore'),
+    ('xavierkhoo@net.com', 'Japan');
 
 /* Current Education Relation */
-INSERT INTO CurrentEducation (MemberEmail, InstituteName, YearOfAdmission, CurrentLevelOfStudy, CourseOfStudy) VALUES
-    ('ethanol@gmail.com', 'Singapore Polytechnic', 2019, 'Second Year', 'Applied AI and Analytics'),
-    ('bucky@barnes.net', 'Meridian Junior College', 2000, 'Second Year', 'PCME');
+INSERT INTO CurrentEducation (MemberEmail, InstituteName, YearOfAdmission, Qualification, CurrentLevelOfStudy, CourseOfStudy) VALUES
+    ('ethanol@gmail.com', 'Singapore Polytechnic', 2019, 'Diploma', 'Second Year', 'Applied AI and Analytics'),
+    ('bucky@barnes.net', 'Meridian Junior College', 2000, 'GCE A Level', 'Second Year', 'PCME'),
+    ('lucy3@mmail.com', 'SUTD', 2018, 'Bacheler Degree', 'Last Year', 'Business & Finance'),
+    ('aiden@yahoo.com', 'Victoria School', 2020, 'GCE O Level', 'Secondary One', 'GCE O Level'),
+    ('xavierkhoo@net.com', 'Singapore Management University', 2015, 'Doctorate', 'Last Year', 'HR Management');
 
 /* Highest Qualification Relation */
 INSERT INTO HighestQualification (MemberEmail, InstituteName, Qualification, InstituteLocation, FieldOfStudy, GraduationDate) VALUES
@@ -141,7 +154,14 @@ INSERT INTO Review (MemberEmail, CompanyRegNo, OverallRating, SalaryRating, Reco
 INSERT INTO JobVacancy (CompanyRegNo, JobTitle, JobLevel, JobResponsibilities, Specialization, WorkLocation, AdvertisementDate, ApplicationClosingDate, MinSalary, MaxSalary) VALUES
     ('C2019', 'Healthcare Assistant', 'Assistant', 'Help in patient registration', 'Healthcare', 'Changi', NULL, NULL, 3000.0, NULL),
     ('C1001', 'Software Engineer', 'Employee', 'Help to design new application', 'IT Software', 'Online', NULL, '2021-05-26', 5500.0, NULL),
-    ('C4568', 'Pipe Inspector', 'Inspector', 'Inspect status of sewage pipelines', 'Plumbing', 'Bukit Panjang', '2021-07-26', NULL, NULL, 7000.0);
+    ('C4568', 'Pipe Inspector', 'Inspector', 'Inspect status of sewage pipelines', 'Plumbing', 'Bukit Panjang', '2021-07-26', NULL, NULL, 7000.0),
+    ('C1001', 'DevOps Engineer', 'Engineer', 'Design a sustainable DevOps lifecycle', 'IT DevOps', 'Kallang', '2020-12-01', '2021-12-01', 6500, NULL),
+    ('C2020', 'Master Potter', 'Senior Mentor', 'Teach new employees the art of pottery', 'Clayware', 'Tiong Bahru', NULL, NULL, 2500.0, 5000.0),
+    ('C9999', 'Network Designer', 'Engineer', 'Design new telecommunications networks', 'Telecommunications', 'Tampines', NULL, NULL, NULL, NULL),
+    ('C9999', 'Help Desk Support', 'Employee', 'Attend to customer enquiries', 'Customer Support', 'Bukit Timah', NULL, NULL, NULL, NULL),
+    ('C4000', 'Business Analyst', 'Analyst', 'Forecast business trends and oversee development', 'Data Analysis', 'Online', NULL, NULL, NULL, NULL),
+    ('C2021', 'Studio Manager', 'Manager', 'Open and lock up music studio', 'Logistics', 'Dhoby Ghaut', NULL, NULL, 1500.0, NULL),
+    ('C2021', 'Score Composer', 'Composer', 'Compose new scores for the band', 'Music', 'Dhoby Ghaut', NULL, '2022-01-02', 3000.0, 4500.0);
 
 /* Job Application Relation */
 INSERT INTO JobApplication (MemberEmail, JobID) VALUES

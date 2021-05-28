@@ -37,6 +37,9 @@ JobStreet ---- doc ---- appendices.docx
            |        |                `-- basic ---- data.sql
            |        |                           `-- init.sql
            |        |
+           |        |-- others ---- job-enquiry.sql
+           |        |           `-- summary-profile.sql
+           |        |
            |        `-- select ---- query-1.sql
            |                    |-- query-2.sql
            |                    |-- query-3.sql

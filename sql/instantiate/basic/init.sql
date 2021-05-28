@@ -66,11 +66,10 @@ CREATE TABLE Member (
     FirstName VARCHAR(15) NOT NULL,
     LastName VARCHAR(15) DEFAULT NULL,
     [Password] VARCHAR(20) NOT NULL,
-    /* HasWorkExperience BIT NOT NULL DEFAULT 0, */
     WorkingSince INTEGER DEFAULT NULL,
     ExpectedSalary DECIMAL(7, 2) DEFAULT NULL,
     ResidentCountry VARCHAR(20) NOT NULL,
-    Nationality VARCHAR(20) DEFAULT NULL,
+    Nationality VARCHAR(20) NOT NULL,
     PRCountry VARCHAR(20) DEFAULT NULL,
     PRIMARY KEY (Email),
     CHECK (Email LIKE '%@%'),
@@ -116,6 +115,7 @@ CREATE TABLE CurrentEducation (
     CurrentLevelOfStudy VARCHAR(15) NOT NULL,
     CourseOfStudy VARCHAR(30) NOT NULL,
     InstituteName VARCHAR(40) NOT NULL,
+    Qualification VARCHAR(25) NOT NULL,
     PRIMARY KEY (MemberEmail),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
     CHECK (YearOfAdmission BETWEEN 1900 AND 2200)
@@ -163,6 +163,21 @@ CREATE TABLE WorkExperience (
     CHECK ((CompanyRegNo IS NULL AND CompanyName IS NOT NULL) OR (CompanyRegNo IS NOT NULL AND CompanyName IS NULL))
 );
 
+CREATE TABLE Review (
+    MemberEmail VARCHAR(30) NOT NULL,
+    CompanyRegNo CHAR(5) NOT NULL,
+    RecommendToFriend BIT NOT NULL,
+    OverallRating TINYINT NOT NULL,
+    SalaryRating VARCHAR(7) NOT NULL,
+    DateOfReview DATE NOT NULL DEFAULT GETDATE(),
+    PRIMARY KEY (MemberEmail, CompanyRegNo),
+    FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
+    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo),
+    CHECK (OverallRating BETWEEN 1 AND 5),
+    CHECK (SalaryRating IN ('High', 'Average', 'Low')),
+    CHECK (dbo.CheckWorkExperience(MemberEmail, CompanyRegNo) = 1)
+);
+
 CREATE TABLE JobVacancy (
     CompanyRegNo CHAR(5) NOT NULL,
     JobID INTEGER IDENTITY(1, 1) NOT NULL,
@@ -178,21 +193,6 @@ CREATE TABLE JobVacancy (
     PRIMARY KEY (JobID),
     FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo),
     CHECK (MaxSalary > MinSalary)
-);
-
-CREATE TABLE Review (
-    MemberEmail VARCHAR(30) NOT NULL,
-    CompanyRegNo CHAR(5) NOT NULL,
-    RecommendToFriend BIT NOT NULL,
-    OverallRating TINYINT NOT NULL,
-    SalaryRating VARCHAR(7) NOT NULL,
-    DateOfReview DATE NOT NULL DEFAULT GETDATE(),
-    PRIMARY KEY (MemberEmail, CompanyRegNo),
-    FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
-    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo),
-    CHECK (OverallRating BETWEEN 1 AND 5),
-    CHECK (SalaryRating IN ('High', 'Average', 'Low')),
-    CHECK (dbo.CheckWorkExperience(MemberEmail, CompanyRegNo) = 1)
 );
 
 CREATE TABLE JobApplication (
