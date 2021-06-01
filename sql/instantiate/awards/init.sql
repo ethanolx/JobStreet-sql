@@ -23,9 +23,9 @@ CREATE FUNCTION dbo.CheckAwardConferment(@em VARCHAR(30), @comp CHAR(5), @dt DAT
 BEGIN
     IF
         (SELECT COUNT(*)
-        FROM dbo.GetWorkingPeriods(@em, @comp) 
+        FROM dbo.GetWorkingPeriods(@em, @comp)
         WHERE
-            JoinedIn <= @dt AND 
+            JoinedIn <= @dt AND
             ISNULL(JoinedUntil, '9999-12-31') >= @dt) >= 1
         RETURN 1
     RETURN 0
@@ -43,7 +43,7 @@ CREATE TABLE Award (
 CREATE TABLE CompanyAward (
     CompanyRegNo CHAR(5) NOT NULL,
     AwardNo CHAR(5) NOT NULL,
-    Value DECIMAL(7, 2) NOT NULL,
+    [Value] DECIMAL(7, 2) NOT NULL,
     PRIMARY KEY (CompanyRegNo, AwardNo),
     FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo),
     FOREIGN KEY (AwardNo) REFERENCES Award (AwardNo)
@@ -56,8 +56,7 @@ CREATE TABLE AwardConferment (
     AwardNo CHAR(5) NOT NULL,
     MemberEmail VARCHAR(30) NOT NULL,
     CompanyRegNo CHAR(5) NOT NULL,
-    FOREIGN KEY (AwardNo) REFERENCES Award (AwardNo),
+    FOREIGN KEY (CompanyRegNo, AwardNo) REFERENCES CompanyAward (CompanyRegNo, AwardNo),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
-    FOREIGN KEY (CompanyRegNo) REFERENCES Company (CompanyRegNo),
     CHECK (dbo.CheckAwardConferment(MemberEmail, CompanyRegNo, DateAwarded) = 1)
 );

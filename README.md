@@ -50,4 +50,5 @@ JobStreet ---- doc ---- appendices.docx
 
 ## See Also
 
+Appendices: `JobStreet/doc/appendices.docx`
 Entity Relationship Diagram: `JobStreet/doc/jobstreet.erd`

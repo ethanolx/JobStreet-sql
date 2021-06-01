@@ -13,7 +13,7 @@ INSERT INTO Award (AwardNo, AwardName) VALUES
     ('A7000', 'Best Networking Engineer'),
     ('A8000', 'Most Productive Staff');
 
-INSERT INTO CompanyAward (CompanyRegNo, AwardNo, Value) VALUES
+INSERT INTO CompanyAward (CompanyRegNo, AwardNo, [Value]) VALUES
     ('C1230', 'A2311', 2000.00),
     ('C1230', 'A3212', 4000.00),
     ('C3456', 'A2311', 3000.00),

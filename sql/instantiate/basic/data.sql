@@ -1,7 +1,7 @@
 USE JobStreet2012085;
 
 /* Member Relation */
-INSERT INTO Member (Email, FirstName, LastName, Password, ResidentCountry, Nationality, PRCountry, ExpectedSalary, WorkingSince) VALUES
+INSERT INTO Member (Email, FirstName, LastName, [Password], ResidentCountry, Nationality, PRCountry, ExpectedSalary, WorkingSince) VALUES
     ('alanang@gmail.com', 'Alan', 'Ang', 'GoofieWord', 'Singapore', 'Singapore', NULL, 7000.0, 1980),
     ('LeeBB@gmail.com', 'Beng', 'Lee', 'opopiuy', 'Singapore', 'Singapore', 'Singapore', 5000.0, 1990),
     ('LeeCY@Gmail.com', 'ChuanYong', 'Lee', 'xvytyu', 'Singapore', 'Hong Kong', 'Singapore', 4500.0, 1990),
@@ -17,7 +17,7 @@ INSERT INTO Member (Email, FirstName, LastName, Password, ResidentCountry, Natio
     ('xavierkhoo@net.com', 'Xavier', 'Khoo', '2s*n3Kd3j', 'Singapore', 'Japan', 'Singapore', 5600.0, NULL);
 
 /* Language Relation */
-INSERT INTO Language (MemberEmail, Language, LangProficiency, PrimaryLanguage) VALUES
+INSERT INTO Language (MemberEmail, [Language], LangProficiency, PrimaryLanguage) VALUES
     ('alanang@gmail.com', 'English', 7, 0),
     ('alanang@gmail.com', 'Mandarin', 8, 1),
     ('LeeBB@gmail.com', 'Mandarin', 8, 1),
@@ -106,7 +106,7 @@ INSERT INTO HighestQualification (MemberEmail, InstituteName, Qualification, Ins
     ('lucy3@mmail.com', 'Nanyang Polytechnic', 'Diploma', 'Singapore', 'Chemical Engineering', '2002-04-16');
 
 /* Company Relation */
-INSERT INTO Company (CompanyRegNo, CompanyName, Industry, Address, CompanySizeMin, CompanySizeMax, WorkStartTime, WorkEndTime) VALUES
+INSERT INTO Company (CompanyRegNo, CompanyName, Industry, [Address], CompanySizeMin, CompanySizeMax, WorkStartTime, WorkEndTime) VALUES
     ('C1230', 'Aston Systems and Maintenance', 'Pipes and Sewage', 'Jurong', 500, NULL, '08:00:00', NULL),
     ('C1234', 'Good Earth Pte Ltd', 'Engineering', 'Bukit Panjang', NULL, NULL, NULL, '18:00:00'),
     ('C3456', 'MidEast Bank', 'Finance and Services', 'Raffles City', NULL, NULL, NULL, NULL),
@@ -120,7 +120,7 @@ INSERT INTO Company (CompanyRegNo, CompanyName, Industry, Address, CompanySizeMi
 
 /* Work Experience Relation */
 /* Registered Companies */
-INSERT INTO WorkExperience (MemberEmail, PositionTitle, PositionLevel, Role, Specialization, CompanyRegNo, JoinedIn, JoinedUntil) VALUES
+INSERT INTO WorkExperience (MemberEmail, PositionTitle, PositionLevel, [Role], Specialization, CompanyRegNo, JoinedIn, JoinedUntil) VALUES
     ('alanang@gmail.com', 'Programmer', 'Jr Executive', 'Systems', 'Civil Engineering', 'C4568', '2012-08-01', NULL),
     ('LeeBB@gmail.com', 'Manager', 'Manager', 'Management', 'Banking', 'C3456', '1999-04-01', NULL),
     ('LinJJ@gmail.com', 'Engineer', 'Executive', 'Operations', 'Civil Engineering', 'C4568', '1980-01-01', '1982-05-01'),
@@ -134,7 +134,7 @@ INSERT INTO WorkExperience (MemberEmail, PositionTitle, PositionLevel, Role, Spe
     ('lucy3@mmail.com', 'Manager', 'Manager', 'Management', 'Training', 'C2021', '2003-06-07', NULL);
 
 /* Non-Registered Company */
-INSERT INTO WorkExperience (MemberEmail, PositionTitle, PositionLevel, Role, Specialization, CompanyName, JoinedIn, JoinedUntil) VALUES
+INSERT INTO WorkExperience (MemberEmail, PositionTitle, PositionLevel, [Role], Specialization, CompanyName, JoinedIn, JoinedUntil) VALUES
     ('john@inet.com', 'Employee', 'Employee', 'Employee', 'Specialist', 'Singapore Armed Forces', '2010-01-20', '2010-10-27');
 
 /* Review Relation */

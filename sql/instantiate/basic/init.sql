@@ -78,10 +78,10 @@ CREATE TABLE Member (
 
 CREATE TABLE [Language] (
     MemberEmail VARCHAR(30) NOT NULL,
-    Language VARCHAR(20) NOT NULL,
+    [Language] VARCHAR(20) NOT NULL,
     PrimaryLanguage BIT NOT NULL DEFAULT 0,
     LangProficiency TINYINT NOT NULL,
-    PRIMARY KEY (MemberEmail, Language),
+    PRIMARY KEY (MemberEmail, [Language]),
     FOREIGN KEY (MemberEmail) REFERENCES Member (Email),
     CHECK (LangProficiency BETWEEN 0 AND 10)
 );
@@ -135,7 +135,7 @@ CREATE TABLE HighestQualification (
 CREATE TABLE Company (
     CompanyRegNo CHAR(5) NOT NULL,
     CompanyName VARCHAR(40) NOT NULL UNIQUE,
-    Address VARCHAR(40) DEFAULT NULL,
+    [Address] VARCHAR(40) DEFAULT NULL,
     WorkStartTime TIME DEFAULT NULL,
     WorkEndTime TIME DEFAULT NULL,
     CompanySizeMin INTEGER DEFAULT NULL,
@@ -150,7 +150,7 @@ CREATE TABLE WorkExperience (
     PositionTitle VARCHAR(40) NOT NULL,
     CompanyRegNo CHAR(5),
     MemberEmail VARCHAR(30) NOT NULL,
-    Role VARCHAR(20) NOT NULL,
+    [Role] VARCHAR(20) NOT NULL,
     PositionLevel VARCHAR(20) NOT NULL,
     Specialization VARCHAR(40) NOT NULL,
     JoinedIn DATE NOT NULL,
